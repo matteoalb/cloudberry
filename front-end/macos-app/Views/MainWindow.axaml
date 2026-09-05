@@ -21,6 +21,7 @@
             <NativeMenuItem Header="File">
                 <NativeMenu>
                     <NativeMenuItem Header="Import..." Gesture="Cmd+O" Command="{Binding OpenCommand}"/>
+                    <NativeMenuItem Header="Download" Gesture="Cmd+D" Command="{Binding DownloadCommand}"/>
                     <NativeMenuItemSeparator/>
                     <NativeMenuItem Header="Raw Mode" Gesture="Cmd+R" Command="{Binding RawCommand}"/>
                     <NativeMenuItem Header="Preview Mode" Gesture="Cmd+P" Command="{Binding PreviewCommand}"/>
@@ -28,4 +29,69 @@
             </NativeMenuItem>
         </NativeMenu>
     </NativeMenu.Menu>
+
+    <SplitView IsPaneOpen="{Binding IsPaneOpen}"
+            DisplayMode="CompactInline"
+            CompactPaneLength="48"
+            OpenPaneLength="500">
+        <SplitView.Pane>
+            <Border Background="#303037">
+            
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                            HorizontalScrollBarVisibility="Disabled">
+
+                    <StackPanel>
+                        <Button Content="☰" Command="{Binding TogglePaneCommand}"
+                                Width="48" HorizontalAlignment="Left" />
+                        
+                        <StackPanel Margin="16"
+                            IsVisible="{Binding IsPaneOpen}">
+
+                            <!-- Here are displayed all the buttons to create a hierarchy -->
+                            
+                        </StackPanel>
+
+                    </StackPanel>
+
+                </ScrollViewer>
+            </Border>
+        </SplitView.Pane>
+        <SplitView.Content>
+        
+            <Grid ColumnDefinitions="Auto,*,Auto">
+
+                <Button Grid.Column="0"
+                        Width="40" Height="40"
+                        Margin="8"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        VerticalAlignment="Center"
+                        Command="{Binding LeftButtonCommand}">
+                    <Image Source="/Assets/arrow_icon.png" Width="24" Height="24" />
+                </Button>
+
+                <Image Grid.Column="1"
+                    Source="{Binding DisplayedImage}"
+                    Stretch="Uniform"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch" />
+
+                <Button Grid.Column="2"
+                        Width="40" Height="40"
+                        Margin="8"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        VerticalAlignment="Center"
+                        Command="{Binding RightButtonCommand}">
+                    <Image Source="/Assets/arrow_icon.png" Width="24" Height="24">
+                        <Image.RenderTransform>
+                            <RotateTransform Angle="180" />
+                        </Image.RenderTransform>
+                    </Image>
+                </Button>
+
+            </Grid>
+
+        </SplitView.Content>
+    </SplitView>
 </Window>
