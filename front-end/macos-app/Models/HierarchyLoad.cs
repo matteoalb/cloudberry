@@ -18,14 +18,14 @@ public static class HierarchyLoad
 
     public static HierarchyElement LoadFromLocalFolder()
     {
-        return LoadFromPath("", rootName, 0);
+        return LoadFromPath("", rootName, 0, null);
     }
 
-    public static HierarchyElement LoadFromPath(string parentPath, string elemName, int depth)
+    public static HierarchyElement LoadFromPath(string parentPath, string elemName, int depth, HierarchyElement? parent)
     {
         Type type = GetTypeByName(elemName);
         string elemPath = Path.Combine(parentPath, elemName);
-        HierarchyElement elem = new HierarchyElement(elemName, depth, elemPath);
+        HierarchyElement elem = new HierarchyElement(elemName, depth, elemPath, parent);
 
         if(type != Type.Folder)
             return elem; // If it is not a folder, HierarchyElement directly is ready
@@ -37,7 +37,7 @@ public static class HierarchyLoad
 
         foreach (string child in children)
         {
-            elem.AddChild(LoadFromPath(elemPath, child, depth+1));
+            elem.AddChild(LoadFromPath(elemPath, child, depth+1, elem));
         }
 
         return elem;

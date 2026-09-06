@@ -20,6 +20,8 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private Bitmap? displayedImage;
 
+    public event Action<int>? NavigationTriggered;
+
     public MainViewModel()
     {
         LoadFile("");
@@ -87,6 +89,8 @@ public partial class MainViewModel : ViewModelBase
     {
         if(!previewMode)
             return;
+
+        NavigationTriggered?.Invoke(input);
     }
 
     public void LoadFile(string path)

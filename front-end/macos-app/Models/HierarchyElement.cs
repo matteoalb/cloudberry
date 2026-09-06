@@ -17,14 +17,16 @@ public class HierarchyElement
     public int depth;
     public string path;
     private Dictionary<string, HierarchyElement> children;
+    public HierarchyElement? parent;
 
-    public HierarchyElement(string _name, int _depth, string _path)
+    public HierarchyElement(string _name, int _depth, string _path, HierarchyElement? _parent)
     {
         name = _name;
         depth = _depth;
         path = _path;
         type = HierarchyLoad.GetTypeByName(_name);
         children = new Dictionary<string, HierarchyElement>();
+        parent = _parent;
     }
 
     public List<HierarchyElement> GetChildren()
@@ -33,6 +35,19 @@ public class HierarchyElement
             return new List<HierarchyElement>();
 
         return new List<HierarchyElement>(children.Values);
+    }
+
+    public List<HierarchyElement> GetImageChildren()
+    {
+        List<HierarchyElement> lst = new List<HierarchyElement>();
+
+        foreach(HierarchyElement child in children.Values)
+        {
+            if(child.type == Type.Image)
+                lst.Add(child);
+        }
+
+        return lst;
     }
 
     public void AddChild(HierarchyElement child)

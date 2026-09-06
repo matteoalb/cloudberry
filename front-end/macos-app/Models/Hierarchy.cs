@@ -1,6 +1,7 @@
 namespace macos_app.Models;
 
 using System;
+using System.Collections.Generic;
 using macos_app.ViewModels;
 using macos_app.Views;
 
@@ -8,14 +9,14 @@ public class Hierarchy
 {
     private readonly MainWindow window;
 
-    private HierarchyElement root;
+    public HierarchyElement root;
 
     public Hierarchy(MainWindow _window)
     {
         window = _window;
         root = HierarchyLoad.Load();
 
-        PrintHierarchy();
+        //PrintHierarchy();
 
         window.UpdateHierarchy(root);
     }
