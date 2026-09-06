@@ -22,6 +22,7 @@
                 <NativeMenu>
                     <NativeMenuItem Header="Import..." Gesture="Cmd+O" Command="{Binding OpenCommand}"/>
                     <NativeMenuItem Header="Download" Gesture="Cmd+D" Command="{Binding DownloadCommand}"/>
+                    <NativeMenuItem Header="Delete" Gesture="Cmd+X" Command="{Binding DeleteCommand}"/>
                     <NativeMenuItemSeparator/>
                     <NativeMenuItem Header="Raw Mode" Gesture="Cmd+R" Command="{Binding RawCommand}"/>
                     <NativeMenuItem Header="Preview Mode" Gesture="Cmd+P" Command="{Binding PreviewCommand}"/>
@@ -45,10 +46,11 @@
                                 Width="48" HorizontalAlignment="Left" />
                         
                         <StackPanel Margin="16"
-                            IsVisible="{Binding IsPaneOpen}">
+                            IsVisible="{Binding IsPaneOpen}"
+                            x:Name="HierarchyStackPanel">
 
                             <!-- Here are displayed all the buttons to create a hierarchy -->
-                            
+
                         </StackPanel>
 
                     </StackPanel>

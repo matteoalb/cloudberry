@@ -4,6 +4,8 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using System;
 
+using macos_app.Models;
+
 namespace macos_app.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
@@ -31,6 +33,12 @@ public partial class MainViewModel : ViewModelBase
 
     [RelayCommand]
     private void Download()
+    {
+        Console.WriteLine("Downloaded file");
+    }
+
+    [RelayCommand]
+    private void Delete()
     {
         Console.WriteLine("Downloaded file");
     }
