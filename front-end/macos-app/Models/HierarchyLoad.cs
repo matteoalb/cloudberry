@@ -8,6 +8,7 @@ namespace macos_app.Models;
 public static class HierarchyLoad
 {
     private static string rootName = "cloudberry_tests";
+    public static string pathToRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
     public static HierarchyElement Load()
     {
@@ -17,22 +18,19 @@ public static class HierarchyLoad
 
     public static HierarchyElement LoadFromLocalFolder()
     {
-        string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-
-        return LoadFromPath(path, rootName, 0);
+        return LoadFromPath("", rootName, 0);
     }
 
     public static HierarchyElement LoadFromPath(string parentPath, string elemName, int depth)
     {
         Type type = GetTypeByName(elemName);
-        HierarchyElement elem = new HierarchyElement(elemName, depth);
+        string elemPath = Path.Combine(parentPath, elemName);
+        HierarchyElement elem = new HierarchyElement(elemName, depth, elemPath);
 
         if(type != Type.Folder)
             return elem; // If it is not a folder, HierarchyElement directly is ready
 
-        string elemPath = Path.Combine(parentPath, elemName);
-
-        List<string> children = Directory.GetFileSystemEntries(elemPath)
+        List<string> children = Directory.GetFileSystemEntries(Path.Combine(pathToRoot, elemPath))
                                 .Select(Path.GetFileName)
                                 .OfType<string>()
                                 .ToList();

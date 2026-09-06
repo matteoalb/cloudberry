@@ -15,12 +15,14 @@ public class HierarchyElement
     public string name;
     public Type type;
     public int depth;
+    public string path;
     private Dictionary<string, HierarchyElement> children;
 
-    public HierarchyElement(string _name, int _depth)
+    public HierarchyElement(string _name, int _depth, string _path)
     {
         name = _name;
         depth = _depth;
+        path = _path;
         type = HierarchyLoad.GetTypeByName(_name);
         children = new Dictionary<string, HierarchyElement>();
     }
@@ -42,6 +44,17 @@ public class HierarchyElement
         }
 
         children.Add(child.name, child);
+    }
+
+    public HierarchyElement GetChild(string n)
+    {
+        if (!children.ContainsKey(n))
+        {
+            Console.WriteLine("Unable to find child " + n + " of " + name + ", returned the parent.");
+            return this;
+        }
+
+        return children[n];
     }
 
     public override string ToString()

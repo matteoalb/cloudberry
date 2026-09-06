@@ -5,6 +5,7 @@ using Avalonia.Platform;
 using System;
 
 using macos_app.Models;
+using System.IO;
 
 namespace macos_app.ViewModels;
 
@@ -21,7 +22,7 @@ public partial class MainViewModel : ViewModelBase
 
     public MainViewModel()
     {
-        DisplayedImage = LoadBitmap("avares://macos-app/Assets/blank_file.png");
+        LoadFile("");
     }
 
 
@@ -52,7 +53,7 @@ public partial class MainViewModel : ViewModelBase
         RawCommand.NotifyCanExecuteChanged();
         PreviewCommand.NotifyCanExecuteChanged();
 
-        DisplayedImage = LoadBitmap("avares://macos-app/Assets/blank_file.png");
+        LoadFile("");
     }
 
     [RelayCommand(CanExecute = nameof(IsRawMode))]
@@ -88,9 +89,27 @@ public partial class MainViewModel : ViewModelBase
             return;
     }
 
-    private Bitmap LoadBitmap(string uri)
+    public void LoadFile(string path)
     {
-        using var stream = AssetLoader.Open(new Uri(uri));
-        return new Bitmap(stream);
+        if(path == "")
+        {
+            DisplayedImage = LoadBitmap("avares://macos-app/Assets/blank_file.png");
+            return;
+        }
+
+        DisplayedImage = LoadBitmap(Path.Combine(HierarchyLoad.pathToRoot,path));
+    }
+
+    private Bitmap LoadBitmap(string path)
+    {
+        if (path.StartsWith("avares://"))
+        {
+            using var stream = AssetLoader.Open(new Uri(path));
+            return new Bitmap(stream);
+        }
+        else
+        {
+            return new Bitmap(path);
+        }
     }
 }
