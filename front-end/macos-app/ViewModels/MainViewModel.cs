@@ -21,6 +21,7 @@ public partial class MainViewModel : ViewModelBase
     private Bitmap? displayedImage;
 
     public event Action<int>? NavigationTriggered;
+    public event Action<bool>? PreviewMode;
 
     public MainViewModel()
     {
@@ -55,6 +56,8 @@ public partial class MainViewModel : ViewModelBase
         RawCommand.NotifyCanExecuteChanged();
         PreviewCommand.NotifyCanExecuteChanged();
 
+        PreviewMode?.Invoke(previewMode);
+
         LoadFile("");
     }
 
@@ -66,6 +69,8 @@ public partial class MainViewModel : ViewModelBase
         previewMode = true;
         RawCommand.NotifyCanExecuteChanged();
         PreviewCommand.NotifyCanExecuteChanged();
+
+        PreviewMode?.Invoke(previewMode);
 
         Navigate(0);
     }

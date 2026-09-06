@@ -16,6 +16,8 @@ public partial class MainWindow : Window
     private List<HierarchyElement> currentFolderImages;
     private int currentImage = 0;
 
+    private bool previewMode = true;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -28,7 +30,10 @@ public partial class MainWindow : Window
         DataContextChanged += (s, e) =>
         {
             if (DataContext is MainViewModel vm)
+            {
                 vm.NavigationTriggered += OnNavigation;
+                vm.PreviewMode += OnPreview;
+            }
         };
     }
 
@@ -109,7 +114,9 @@ public partial class MainWindow : Window
             if(element.type == Models.Type.Image) // If an image is selected, we display a preview
             {   
                 currentImage = currentFolderImages.IndexOf(element);
-                vm.LoadFile(path);
+
+                if(previewMode)
+                    vm.LoadFile(path);
             }
             else
                 vm.LoadFile("");
@@ -118,7 +125,7 @@ public partial class MainWindow : Window
 
     private void OnNavigation(int input)
     {
-        if(currentFolderImages.Count <= 1)
+        if(currentFolderImages.Count == 0)
             return;
 
         currentImage = (currentImage + input) % currentFolderImages.Count;
@@ -126,5 +133,10 @@ public partial class MainWindow : Window
             currentImage += currentFolderImages.Count;
 
         OnHierarchyElementClicked(currentFolderImages[currentImage].path, false);
+    }
+
+    private void OnPreview(bool preview)
+    {
+        previewMode = preview;
     }
 }
