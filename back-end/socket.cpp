@@ -9,6 +9,8 @@
 
 TCPSocket::TCPSocket(){
     mSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+    // Set socket to non-blocking
     fcntl(mSocket, F_SETFL, O_NONBLOCK);
 };
 
@@ -22,9 +24,13 @@ TCPSocket::~TCPSocket(){
 bool TCPSocket::Initialized(){ return mSocket!=-1; }
 
 bool TCPSocket::Bind(unsigned short port){
+    return TCPSocket::Bind(INADDR_ANY, port);
+}
+
+bool TCPSocket::Bind(in_addr_t addr, unsigned short port){
     sockaddr_in server{};
     server.sin_family = AF_INET;
-    server.sin_addr.s_addr = INADDR_ANY;
+    server.sin_addr.s_addr = addr;
     server.sin_port = htons(port);
     
     if(bind(mSocket, (const sockaddr*)&server, sizeof(server)) == -1){
@@ -54,25 +60,43 @@ Client TCPSocket::Accept(){
         }
 
         std::cerr << "accept() failed: " << strerror(errno) << std::endl;
-    }else{
-        // Printing client IP Address
-        char buff[INET6_ADDRSTRLEN] = {0};
-        std::cout << "Client connected: " 
-                    << inet_ntop(clientAddr.sin_family, (void*)&(clientAddr.sin_addr), buff, INET6_ADDRSTRLEN)
-                    << std::endl;
-        client.addr = clientAddr;
+        close(client.socket);
+        return client;
     }
+
+    // Setting client socket to non-blocking
+    if(fcntl(client.socket, F_SETFL, O_NONBLOCK)){
+        std::cerr << "Couldn't set client socket to non-blocking: " << strerror(errno) << std::endl;
+        close(client.socket);
+        return client;
+    }
+
+    // Printing client IP Address
+    std::cout << "Client connected: " 
+                << GetAddress(clientAddr)
+                << std::endl;
+    client.addr = clientAddr;
+    
 
     return client;
 }
 
 
-bool TCPSocket::Send(const unsigned char* data, unsigned short len){
-    unsigned short networkLen = htons(len);
-	return send(mSocket, reinterpret_cast<const char*>(& networkLen), sizeof(networkLen), 0) == sizeof(networkLen)
-		&& send(mSocket, reinterpret_cast<const char*>(data), len, 0) == len;
+bool TCPSocket::Send(const void* data, size_t size){
+    const char* ptr = static_cast<const char*>(data);
+    size_t totalSent = 0;
+
+    while (totalSent < size) {
+        int sent = send(mSocket, ptr + totalSent, static_cast<int>(size - totalSent), 0);
+        if (sent <= 0) {
+            return false; // error or connection closed
+        }
+        totalSent += sent;
+    }
+    return true;
 }
 
+/*
 bool TCPSocket::Receive(std::vector<unsigned char>& buffer){
     unsigned short expectedSize;
 	int pending = recv(mSocket, reinterpret_cast<char*>(&expectedSize), sizeof(expectedSize), 0);
@@ -99,4 +123,15 @@ bool TCPSocket::Receive(std::vector<unsigned char>& buffer){
 		}
 	} while ( receivedSize < expectedSize );
 	return true;
+}
+*/
+
+std::string GetAddress(const sockaddr_in& addr)
+{
+	char buff[INET6_ADDRSTRLEN] = { 0 };
+	return inet_ntop(addr.sin_family, (void*)&(addr.sin_addr), buff, INET6_ADDRSTRLEN);
+}
+
+unsigned short GetPort(const sockaddr_in& addr){
+        return ntohs(addr.sin_port);
 }
