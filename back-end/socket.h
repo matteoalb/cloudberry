@@ -38,10 +38,10 @@ class TCPSocket{
     
     public:
         TCPSocket();
+        TCPSocket(int sock);
         ~TCPSocket();
 
         bool Initialized();
-        bool Bind(in_addr_t addr, unsigned short port);
         bool Bind(unsigned short port); 
         bool Listen();
         Client Accept();

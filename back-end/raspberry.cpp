@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <unistd.h>
+#include <cstring>
 
 TCPSocket serverSocket;
 std::vector<Client> clients;

@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <cstring>
 
 
 TCPSocket::TCPSocket(){
@@ -12,6 +13,10 @@ TCPSocket::TCPSocket(){
 
     // Set socket to non-blocking
     fcntl(mSocket, F_SETFL, O_NONBLOCK);
+};
+
+TCPSocket::TCPSocket(int sock){
+    mSocket = sock;
 };
 
 TCPSocket::~TCPSocket(){
@@ -24,13 +29,9 @@ TCPSocket::~TCPSocket(){
 bool TCPSocket::Initialized(){ return mSocket!=-1; }
 
 bool TCPSocket::Bind(unsigned short port){
-    return TCPSocket::Bind(INADDR_ANY, port);
-}
-
-bool TCPSocket::Bind(in_addr_t addr, unsigned short port){
     sockaddr_in server{};
     server.sin_family = AF_INET;
-    server.sin_addr.s_addr = addr;
+    server.sin_addr.s_addr = INADDR_ANY;
     server.sin_port = htons(port);
     
     if(bind(mSocket, (const sockaddr*)&server, sizeof(server)) == -1){

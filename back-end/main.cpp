@@ -2,6 +2,8 @@
 #include <csignal>
 #include <iostream>
 
+#define COMPILE_CLIENT // Use to compile the debugging client
+
 #include "raspberry.h"
 #include "client.h" // To remove for server side
 
@@ -15,16 +17,31 @@ int main(){
     std::signal(SIGTERM, interrupt);
     std::signal(SIGINT, interrupt);
 
-    if(c_initialize()==-1){ // Use c_initialize to compile a debugging_client
+    #ifdef COMPILE_CLIENT
+    if(c_initialize()==-1){
         std::cout << "Couldn't initialize CloudBerry, exiting.";
         return 0;
     }
+    #else
+    if(initialize()==-1){
+        std::cout << "Couldn't initialize CloudBerry, exiting.";
+        return 0;
+    }
+    #endif
 
     while(program_running.load()){
-        c_update(); // Use c_update to compile a debugging_client
+        #ifdef COMPILE_CLIENT
+        c_update();
+        #else
+        update();
+        #endif
     }
 
-    c_shutdown(); // Use c_shutdown to compile a debugging_client
-
+    #ifdef COMPILE_CLIENT
+    c_shutdown();
+    #else
+    shutdown();
+    #endif
+    
     return 0;
 }
