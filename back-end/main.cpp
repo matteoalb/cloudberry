@@ -19,12 +19,12 @@ int main(){
 
     #ifdef COMPILE_CLIENT
     if(c_initialize()==-1){
-        std::cout << "Couldn't initialize CloudBerry, exiting.";
+        std::cout << "Couldn't initialize CloudBerry, exiting." << std::endl;
         return 0;
     }
     #else
     if(initialize()==-1){
-        std::cout << "Couldn't initialize CloudBerry, exiting.";
+        std::cout << "Couldn't initialize CloudBerry, exiting." << std::endl;
         return 0;
     }
     #endif

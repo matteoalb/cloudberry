@@ -37,7 +37,7 @@ void update(){
     ManageClients();
 
     for(Client& c: clients){
-        ParseClientRequest(client);
+        ParseClientRequest(c);
     }
 }
 

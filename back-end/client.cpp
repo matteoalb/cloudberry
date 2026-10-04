@@ -9,7 +9,7 @@
 
 TCPSocket c_serverSocket;
 
-const char* piname = "albpi5";
+const char* piname = "albpi5.local";
 
 bool connect_to_server(){
     addrinfo hints{};
@@ -19,7 +19,7 @@ bool connect_to_server(){
     addrinfo* res = nullptr;
     int err = getaddrinfo(piname, "6666", &hints, &res);
     if (err != 0) {
-        std::cerr << "Couldn't get Raspberry's IP: " << gai_strerror(err) << "\n";
+        std::cerr << "Couldn't get Raspberry's IP: " << gai_strerror(err) << std::endl;
         return false;
     }
 
@@ -38,7 +38,7 @@ bool connect_to_server(){
     freeaddrinfo(res);
 
     if(sock < 0){
-        std::cerr << "Couldn't connect to Pi...\n";
+        std::cerr << "Couldn't connect to Pi..." << std::endl;
         return false;
     }
     c_serverSocket = TCPSocket(sock);
@@ -58,14 +58,14 @@ int c_initialize(){
 
 void c_update(){
     u_int32_t len = 0;
-    uint8_t requestType = 0;
-
+    int requestType = 0;
+    
     std::cin >> requestType;
 
     if(std::cin.fail())
         std::cin.clear();
 
-    RawPacketHeader header{htonl(len), requestType};
+    RawPacketHeader header{htonl(len), (uint8_t)requestType};
     bool sent = c_serverSocket.Send(&header, sizeof(header));
 
     if(!sent)
