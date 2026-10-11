@@ -13,5 +13,11 @@ Arguments
         Args: starting folder path, depth
 2:  Ask for file
         Args: preview? [bool], path
+3:  Delete file
+        Args: path
+4:  Move file
+        Args: oldPath, newPath
+5:  Upload file
+        Args: path, file
 
 ## Sent to clients

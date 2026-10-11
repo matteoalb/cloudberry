@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-enum class Request { Space, Hierarchy, File, Undefined };
+enum class Request { Space, Hierarchy, File, Delete, Move, Upload, Undefined };
 enum class ParseState { Waiting4Header, Waiting4Content };
 
 #pragma pack(push, 1)

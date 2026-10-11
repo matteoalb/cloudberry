@@ -137,6 +137,18 @@ void ProcessRequest(Client& client, std::vector<uint8_t>& content){
     case Request::File:
         std::cout << "Requesting specific file" << std::endl;
         break;
+
+    case Request::Delete:
+        std::cout << "Deleting specific file" << std::endl;
+        break;
+
+    case Request::Move:
+        std::cout << "Moving file" << std::endl;
+        break;
+
+    case Request::Upload:
+        std::cout << "Uploading new file" << std::endl;
+        break;
     
     default:
         std::cout << "Undefined request, skipping..." << std::endl;
