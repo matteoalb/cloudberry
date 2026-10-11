@@ -7,9 +7,9 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
-TCPSocket c_serverSocket;
+TCPSocket* c_serverSocket = nullptr;
 
-const char* piname = "albpi5.local";
+const char* piname = "127.0.0.1";
 
 bool connect_to_server(){
     addrinfo hints{};
@@ -41,7 +41,7 @@ bool connect_to_server(){
         std::cerr << "Couldn't connect to Pi..." << std::endl;
         return false;
     }
-    c_serverSocket = TCPSocket(sock);
+    c_serverSocket = new TCPSocket(sock);
 
     return true;
 }
@@ -57,21 +57,26 @@ int c_initialize(){
 }
 
 void c_update(){
-    u_int32_t len = 0;
     int requestType = 0;
-    
-    std::cin >> requestType;
 
-    if(std::cin.fail())
+    if (!(std::cin >> requestType)) {
+        if (std::cin.eof())
+            return;
         std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return;
+    }
 
-    RawPacketHeader header{htonl(len), (uint8_t)requestType};
-    bool sent = c_serverSocket.Send(&header, sizeof(header));
+    std::cout << "Sending request: " << requestType << std::endl;
+
+    RawPacketHeader header{htonl(0), (uint8_t)requestType};
+    bool sent = c_serverSocket->Send(&header, sizeof(header));
 
     if(!sent)
         std::cout << "Error while sending..." << std::endl;
 }
 
 void c_shutdown(){
-    
+    delete c_serverSocket;
+    c_serverSocket = nullptr;
 }

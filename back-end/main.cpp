@@ -2,7 +2,7 @@
 #include <csignal>
 #include <iostream>
 
-#define COMPILE_CLIENT // Use to compile the debugging client
+//#define COMPILE_CLIENT // Use to compile the debugging client
 
 #include "raspberry.h"
 #include "client.h" // To remove for server side

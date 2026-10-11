@@ -127,19 +127,19 @@ void ProcessRequest(Client& client, std::vector<uint8_t>& content){
     switch (client.header.request)
     {
     case Request::Space:
-        std::cout << "Requesting available space";
+        std::cout << "Requesting available space" << std::endl;
         break;
     
     case Request::Hierarchy:
-        std::cout << "Requesting current hierarchy";
+        std::cout << "Requesting current hierarchy" << std::endl;
         break;
 
     case Request::File:
-        std::cout << "Requesting specific file";
+        std::cout << "Requesting specific file" << std::endl;
         break;
     
     default:
-        std::cout << "Undefined request, skipping...";
+        std::cout << "Undefined request, skipping..." << std::endl;
         break;
     }
 
