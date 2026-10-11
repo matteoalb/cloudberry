@@ -27,12 +27,21 @@ The RPi is running on the Raspberry Pi OS Lite, a port of <b>Debian</b> Trixie. 
 
 For debugging purposes, the RPi is accessed by SSH from a computer.
 
-Code is uploaded using :
+Code is uploaded using:
 ```
 scp cloudberry-be username@pi.local:/home/username/
 scp -r cloudberry-be.dSYM username@pi.local:/home/username/
 
 scp stop.sh username@pi.local:/home/username/
+```
+
+The server is started in background using:
+````
+ssh -n -f username@pi.local "sh -c 'nohup ./cloudberry-be > /dev/null 2>&1 &'"
+```
+It is stopped using:
+````
+ssh username@pi.local "./stop.sh"
 ```
 
 C++ files are compiled using <i>messense/homebrew-macos-cross-toolchains</i> to fit the RPi's architecture.
